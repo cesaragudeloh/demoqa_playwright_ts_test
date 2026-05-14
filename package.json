@@ -6,15 +6,27 @@
   "scripts": {
     "test": "npm run test:local",
     "test:local": "playwright test --project=chromium",
-    "test:ci": "playwright test --project=chromium",
+    "test:ci": "npm run check && playwright test --project=chromium --project=api",
+    "test:ui": "playwright test tests/ui --project=chromium",
+    "test:api": "playwright test tests/api --project=api",
+    "test:graphql": "playwright test tests/graphql --project=api",
+    "test:smoke": "playwright test --grep @smoke",
+    "test:regression": "playwright test --grep @regression",
     "test:headless": "playwright test --project=chromium",
     "test:headed": "playwright test --headed --project=chromium",
     "test:headed:report": "npm run test:headed && npm run report",
+    "lint": "eslint . --ext .ts",
+    "typecheck": "tsc --noEmit",
+    "check": "npm run lint && npm run typecheck",
     "report": "playwright show-report --port 9324"
   },
   "devDependencies": {
     "@playwright/test": "^1.59.1",
+    "@typescript-eslint/eslint-plugin": "^8.46.3",
+    "@typescript-eslint/parser": "^8.46.3",
     "@types/node": "^25.6.0",
+    "eslint": "^8.57.1",
+    "zod": "^4.1.12",
     "typescript": "^5.9.3"
   }
 }

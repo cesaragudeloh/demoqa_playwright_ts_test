@@ -1,26 +1,49 @@
-# DemoQA Playwright TS Test (POM)
+# Playwright TS - Senior SDET Demo
 
-Automatizacion E2E del formulario `https://demoqa.com/automation-practice-form` con Playwright + TypeScript usando Page Object Model.
+Proyecto de automatizacion con enfoque Senior SDET: UI E2E + API REST + GraphQL, arquitectura por capas, y calidad transversal para CI/CD.
 
-## Estructura
+## Arquitectura
 
-- `pages/PracticeFormPage.ts`: acciones y locators del formulario
-- `tests/automation-practice-form.spec.ts`: escenarios happy/sad path
-- `fixtures/testData.ts`: datos de prueba reutilizables
-- `fixtures/test-file.txt`: archivo de carga para `setInputFiles`
+- `src/core/env.ts`: configuracion por variables de entorno.
+- `src/api/restClient.ts`: cliente reutilizable para pruebas REST.
+- `src/api/graphqlClient.ts`: cliente reutilizable para pruebas GraphQL.
+- `src/data/practiceFormFactory.ts`: datos dinamicos para reducir acoplamiento y flakiness.
+- `pages/PracticeFormPage.ts`: Page Object del formulario DemoQA.
+- `tests/ui/*.spec.ts`: pruebas de interfaz etiquetadas (`@smoke`, `@regression`).
+- `tests/api/*.spec.ts`: pruebas REST con validacion de esquema (`zod`).
+- `tests/graphql/*.spec.ts`: pruebas GraphQL (query valida y manejo de errores).
+- `.github/workflows/ci.yml`: pipeline con lint, typecheck, test y artefactos.
+
+## Variables de entorno (opcionales)
+
+- `UI_BASE_URL` (default: `https://demoqa.com`)
+- `API_BASE_URL` (default: `https://jsonplaceholder.typicode.com`)
+- `GRAPHQL_BASE_URL` (default: `https://countries.trevorblades.com/graphql`)
+- Copia `.env.example` a `.env` si quieres fijar endpoints locales.
 
 ## Instalacion
 
 ```bash
 npm ci
-npx playwright install
+npx playwright install chromium firefox
 ```
 
 ## Ejecucion
 
 ```bash
-npm run test:headless
-npm run test:headed
+npm run check
+npm run test:ui
+npm run test:api
+npm run test:graphql
+npm run test:smoke
 npm run report
 ```
+
+## Entrevista: como demostrar seniority en 10 minutos
+
+1. Explica la separacion por capas (`core`, `api`, `data`, `ui`, `tests`).
+2. Muestra validaciones de contrato con `zod` en pruebas REST/GraphQL.
+3. Ejecuta `npm run check` para evidenciar quality gates.
+4. Muestra `ci.yml` para explicar trazabilidad y artefactos de debugging.
+5. Propone extensiones: Appium (mobile), k6 (performance), dashboards de calidad.
 

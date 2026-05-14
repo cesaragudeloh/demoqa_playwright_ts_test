@@ -1,4 +1,5 @@
 import { defineConfig, devices } from '@playwright/test';
+import { env } from './src/core/env';
 
 const isCI = Boolean(process.env.CI);
 
@@ -23,7 +24,7 @@ export default defineConfig({
         ['html', { open: 'never' }],
       ],
   use: {
-    baseURL: 'https://demoqa.com',
+    baseURL: env.uiBaseUrl,
     headless: true,
     viewport: { width: 1366, height: 768 },
     actionTimeout: 10_000,
@@ -35,7 +36,20 @@ export default defineConfig({
   projects: [
     {
       name: 'chromium',
+      testMatch: /tests\/ui\/.*\.spec\.ts/,
       use: { ...devices['Desktop Chrome'] },
+    },
+    {
+      name: 'firefox',
+      testMatch: /tests\/ui\/.*\.spec\.ts/,
+      use: { ...devices['Desktop Firefox'] },
+    },
+    {
+      name: 'api',
+      testMatch: [/tests\/api\/.*\.spec\.ts/, /tests\/graphql\/.*\.spec\.ts/],
+      use: {
+        baseURL: env.apiBaseUrl,
+      },
     },
   ],
 });
