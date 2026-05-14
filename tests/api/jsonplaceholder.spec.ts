@@ -10,10 +10,10 @@ const postSchema = z.object({
 });
 
 test.describe('JSONPlaceholder REST @api', () => {
-  test('[@smoke] obtiene un post por id', async ({ request }) => {
+  test('[@smoke] obtiene un post por id', async ({ request }, testInfo) => {
     const client = new RestClient(request);
 
-    const response = await client.get('/posts/1');
+    const response = await client.get('/posts/1', testInfo);
     expect(response.status()).toBe(200);
 
     const body = await response.json();
@@ -21,7 +21,7 @@ test.describe('JSONPlaceholder REST @api', () => {
     expect(result.success).toBe(true);
   });
 
-  test('[@regression] crea un post', async ({ request }) => {
+  test('[@regression] crea un post', async ({ request }, testInfo) => {
     const client = new RestClient(request);
 
     const payload = {
@@ -30,7 +30,7 @@ test.describe('JSONPlaceholder REST @api', () => {
       userId: 99,
     };
 
-    const response = await client.post('/posts', payload);
+    const response = await client.post('/posts', payload, testInfo);
     expect(response.status()).toBe(201);
 
     const body = await response.json();
@@ -38,10 +38,10 @@ test.describe('JSONPlaceholder REST @api', () => {
     expect(typeof body.id).toBe('number');
   });
 
-  test('[@regression] responde 404 para recurso inexistente', async ({ request }) => {
+  test('[@regression] responde 404 para recurso inexistente', async ({ request }, testInfo) => {
     const client = new RestClient(request);
 
-    const response = await client.get('/unknown-path');
+    const response = await client.get('/unknown-path', testInfo);
     expect(response.status()).toBe(404);
   });
 });

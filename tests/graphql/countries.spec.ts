@@ -11,22 +11,25 @@ const countrySchema = z.object({
 });
 
 test.describe('Countries GraphQL @graphql', () => {
-  test('[@smoke] consulta un pais por codigo', async ({ request }) => {
+  test('[@smoke] consulta un pais por codigo', async ({ request }, testInfo) => {
     const client = new GraphQLClient(request, env.graphqlBaseUrl);
 
-    const response = await client.query({
-      query: `
-        query CountryByCode($code: ID!) {
-          country(code: $code) {
-            code
-            name
-            capital
-            emoji
+    const response = await client.query(
+      {
+        query: `
+          query CountryByCode($code: ID!) {
+            country(code: $code) {
+              code
+              name
+              capital
+              emoji
+            }
           }
-        }
-      `,
-      variables: { code: 'CO' },
-    });
+        `,
+        variables: { code: 'CO' },
+      },
+      testInfo
+    );
 
     expect(response.status()).toBe(200);
     const body = await response.json();
@@ -37,18 +40,21 @@ test.describe('Countries GraphQL @graphql', () => {
     expect(body.data.country.code).toBe('CO');
   });
 
-  test('[@regression] retorna error cuando el query es invalido', async ({ request }) => {
+  test('[@regression] retorna error cuando el query es invalido', async ({ request }, testInfo) => {
     const client = new GraphQLClient(request, env.graphqlBaseUrl);
 
-    const response = await client.query({
-      query: `
-        query InvalidField {
-          country(code: "CO") {
-            invalidField
+    const response = await client.query(
+      {
+        query: `
+          query InvalidField {
+            country(code: "CO") {
+              invalidField
+            }
           }
-        }
-      `,
-    });
+        `,
+      },
+      testInfo
+    );
 
     expect([200, 400]).toContain(response.status());
     const body = await response.json();

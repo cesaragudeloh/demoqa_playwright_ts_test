@@ -10,6 +10,7 @@
     "test:ui": "playwright test tests/ui --project=chromium",
     "test:api": "playwright test tests/api --project=api",
     "test:graphql": "playwright test tests/graphql --project=api",
+    "test:all": "playwright test --project=chromium --project=firefox --project=api",
     "test:smoke": "playwright test --grep @smoke",
     "test:regression": "playwright test --grep @regression",
     "test:headless": "playwright test --project=chromium",

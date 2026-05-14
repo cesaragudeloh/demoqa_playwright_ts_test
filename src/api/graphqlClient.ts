@@ -1,4 +1,5 @@
-import type { APIRequestContext, APIResponse } from '@playwright/test';
+import type { APIRequestContext, APIResponse, TestInfo } from '@playwright/test';
+import { attachApiExchange } from './apiAttachments';
 
 interface GraphQLRequestBody {
   query: string;
@@ -11,8 +12,18 @@ export class GraphQLClient {
     private readonly endpoint: string
   ) {}
 
-  query(body: GraphQLRequestBody): Promise<APIResponse> {
-    return this.request.post(this.endpoint, { data: body });
+  async query(body: GraphQLRequestBody, testInfo?: TestInfo): Promise<APIResponse> {
+    const response = await this.request.post(this.endpoint, { data: body });
+
+    await attachApiExchange(testInfo, {
+      clientName: 'graphql',
+      method: 'POST',
+      url: this.endpoint,
+      requestBody: body,
+      response,
+    });
+
+    return response;
   }
 }
 
