@@ -1,0 +1,21 @@
+{
+  "name": "demoqa_playwright_ts_test",
+  "version": "1.0.0",
+  "description": "Playwright TypeScript tests for DemoQA automation practice form",
+  "private": true,
+  "scripts": {
+    "test": "npm run test:local",
+    "test:local": "playwright test --project=chromium",
+    "test:ci": "playwright test --project=chromium",
+    "test:headless": "playwright test --project=chromium",
+    "test:headed": "playwright test --headed --project=chromium",
+    "test:headed:report": "npm run test:headed && npm run report",
+    "report": "playwright show-report --port 9324"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.59.1",
+    "@types/node": "^25.6.0",
+    "typescript": "^5.9.3"
+  }
+}
+
