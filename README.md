@@ -1,12 +1,29 @@
 # Playwright TypeScript Test Automation
 
-This project is a layered Playwright + TypeScript automation framework that includes:
+This repository is a layered Playwright + TypeScript automation framework that includes:
 
 - UI end-to-end tests (DemoQA form)
 - REST API tests
 - GraphQL tests
 - Linting and type-check quality gates
 - CI pipeline support
+
+## Suggested GitHub Repository Description
+
+Senior-grade Playwright + TypeScript test automation framework for UI, REST, and GraphQL with tagging, reusable clients, and GitHub Actions CI.
+
+## Framework Highlights
+
+- 100% TypeScript implementation.
+- Clear architecture with separation of concerns (`fixtures/`, `pages/`, `src/`, `tests/`).
+- Page Object Model for UI maintainability.
+- Dynamic and reusable test data setup.
+- Reusable API clients for REST and GraphQL.
+- Quality gates via linting and static type checks.
+- Multi-project Playwright configuration (`chromium`, `firefox`, `api`).
+- Tagged execution strategy (`@smoke`, `@regression`).
+- HTML report artifacts including API/GraphQL request-response attachments.
+- GitHub Actions workflow for automated validation.
 
 ## General Overview
 
@@ -19,6 +36,13 @@ This project is a layered Playwright + TypeScript automation framework that incl
 - `tests/api/*.spec.ts`: REST API tests with schema validation (`zod`).
 - `tests/graphql/*.spec.ts`: GraphQL query and error validation tests.
 - `.github/workflows/ci.yml`: CI workflow (lint, typecheck, tests, artifacts).
+
+## CI/CD (GitHub Actions)
+
+- Workflow file: `.github/workflows/ci.yml`
+- Runs on push and pull requests.
+- Executes lint, typecheck, and Playwright tests.
+- Uploads `playwright-report/` and `test-results/` as artifacts.
 
 ## Requirements
 
@@ -69,6 +93,43 @@ npm run report
 - `npm run test:smoke`: runs tests tagged with `@smoke`.
 - `npm run test:regression`: runs tests tagged with `@regression`.
 - `npm run report`: opens the Playwright HTML report.
+
+## Tagging Strategy
+
+- `@smoke`: critical and fast validations for PR confidence.
+- `@regression`: broader validation set for deeper checks.
+- Tags can be combined with projects and CI jobs to create fit-for-purpose pipelines.
+
+## API Testing Example
+
+Example from `tests/api/jsonplaceholder.spec.ts` using `src/api/restClient.ts`:
+
+```ts
+test('[@regression] creates a post', async ({ request }, testInfo) => {
+  const client = new RestClient(request);
+
+  const payload = {
+	title: 'senior-sdet-demo',
+	body: 'validating post creation flow',
+	userId: 99,
+  };
+
+  const response = await client.post('/posts', payload, testInfo);
+  expect(response.status()).toBe(201);
+});
+```
+
+The `testInfo` argument enables automatic request/response attachments in the HTML report.
+
+## How I Would Scale This Framework in an Enterprise Project
+
+- Add domain-based modules (e.g., `orders`, `payments`, `auth`) with dedicated client/page layers.
+- Add environment profiles and secrets management for dev, stage, and prod-like test runs.
+- Add contract validation via OpenAPI/GraphQL schema checks in CI.
+- Add data factories and synthetic test data services to reduce flaky dependencies.
+- Add parallel execution strategy by risk level and business criticality.
+- Add nightly full-regression and PR smoke pipelines with trend dashboards.
+- Add mobile layer integration (Appium) and performance validation (k6) as separate quality stages.
 
 ## Useful Notes
 
